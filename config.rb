@@ -44,6 +44,17 @@ end
 
 activate :syntax, :line_numbers => true
 
+activate :deploy do |deploy|
+  deploy.deploy_method = :git
+  # Optional Settings
+  # deploy.remote = 'custom-remote' # remote name or git url, default: origin
+  # deploy.branch = 'custom-branch' # default: gh-pages
+  # deploy.strategy = :submodule # commit strategy: can be :force_push or
+  # :submodule
+  # deploy.commit_message = 'custom-message' # default: Automated commit at
+  # timestamp by middleman-deploy version
+end
+
 page "/feed.xml", layout: false
 # Reload the browser automatically whenever files change
 # configure :development do
