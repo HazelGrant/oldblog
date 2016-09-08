@@ -12,28 +12,25 @@
     <%= javascript_include_tag :all %>
   </head>
   <body class="<%= page_classes %>">
-    <div class="container">
-      <div id="main" role="main">
-        <%= yield %>
-      </div>
+    <div id="page">
+      <div id="header" class="site-header">
+        <div class="wrap">
+          <div id="branding" role="banner">
+            <h1 class="site-title"><a class="site-title--link" href="/">Site Title</a></h1>
+          </div><!-- #branding banner -->
+        </div><!-- .wrap -->
+      </div><!-- #header .site-header -->
 
-      <aside>
-        <% if current_article %>
-          <h3>Recent Articles</h3>
-          <ol>
-            <% blog.articles[0...10].each do |article| %>
-              <li><%= link_to article.title, article %> <span class="date"><%= article.date.strftime('%b %e') %></span></li>
-            <% end %>
-          </ol>
-        <% end %>
+      <div id="main">
+        <div class="wrap">
+          <div id="primary">
+            <div id="content" role="main">
+              <%= yield %>
+            </div><!-- #content main -->
+          </div><!-- #primary -->
 
-        <h3>By Year</h3>
-        <ol>
-          <% blog.articles.group_by { |a| a.date.year }.each do |year, articles| %>
-            <li><%= link_to "#{year} (#{articles.size})", blog_year_path(year) %></li>
-          <% end %>
-        </ol>
-      </aside>
-    </div>
+        </div><!-- .wrap -->
+      </div><!-- #main -->
+    </div><!-- #page -->
   </body>
 </html>

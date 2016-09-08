@@ -1,6 +1,6 @@
 <% wrap_layout :layout do %>
   <article>
-    <%= link_to "Home", '/' %>
+    <h2 class="textright blogtitle"><%= current_article.title %></h2>
     <%= yield %>
   </article>
 <% end %>

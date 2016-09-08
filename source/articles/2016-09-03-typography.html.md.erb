@@ -4,17 +4,6 @@ date: 2016-09-03 14:04 UTC
 tags: styleguide
 ---
 
-## Headings
-
-# H1 Heading
-## H2 Heading
-### H3 Heading
-#### H4 Heading
-##### H5 Heading
-###### H6 Heading
-
-## Copy & Lists
-
 This is some copy that is meaningfully relevant. Testing paragraphs usually involves some amount of *lorem ipsum*-ing, but I'm going to be different. I resolve to be different. Just like Apple. OK, no, actually, we're not going to be like Apple. We're going to be different from Apple. So we're going to do something different from thinking different. Which means we're going to think... same? But then by thinking same, we're thinking different from Apple, so really we're thinking different just the same as Apple but... oh, my god I can't handle this paragraph. Moving on.
 
 This unordered list will save the day:
@@ -73,29 +62,67 @@ I will be the hugged paragraph. The paragraph below is going to hug me. Watch it
 Go home, paragraph. You're drunk.
 
 ```ruby
-Life.real?
-Life.fantasy?
+class This
+  attr_accessor :life
 
-catch(:landslide) do
-  reality = true
-  while reality
+  def initialize
+    self.life = Life.real? || Life.fantasy?
+    landslide
+  end
+
+  def landslide
+    while reality = true
+      look_up_to_the_skies
+
+      self.wealth, self.sex = nil, Sex::MALE
+
+      unless self.sympathies[:need]
+        self.easy_come, self.easy_go = true
+        self.high, self.low = 0.1
+      end
+
+      self.matter = wind_direction
+
+      Piano.play
+    end
+  end
+
+  private
+
+  def look_up_to_the_skies
     character.eyes.each do |eye|
       eye.open
       eye.look(direction: 'sky')
       eye.see
     end
+  end
 
-    self.wealth = nil
-    self.sex = Sex::MALE
-
-    self.sympathies.empty
-
-    if self.come_difficulty == Difficulty::EASY && self.go_difficulty == Difficulty::EASY && self.high < 0.1 && self.low < 0.1
-      case wind.direction
-      when 'north', 'south', 'east', 'west'
-        self.matter = false;
-      end
+  def direction(wind)
+    case wind.direction
+    when 'north', 'south', 'east', 'west'
+      false
     end
+  end
+
+  def easy_come_easy_go
+    self.come_difficulty == Difficulty::EASY &&
+      self.go_difficulty == Difficulty::EASY
+  end
+
+  def little_high_little_low
+    self.high < 0.1 && self.low < 0.1
   end
 end
 ```
+
+source: [Reddit](https://i.reddituploads.com/85fcf7342bae46a290bb117acade28f5?fit=max&h=1536&w=1536&s=70366996b9866f91ff1fc98e310583e2)
+
+## Headings
+
+# H1 Heading
+## H2 Heading
+### H3 Heading
+#### H4 Heading
+##### H5 Heading
+###### H6 Heading
+
