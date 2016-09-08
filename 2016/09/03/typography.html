@@ -12,27 +12,22 @@
     <script src="/javascripts/all.js"></script>
   </head>
   <body class="x2016 x2016_09 x2016_09_03 x2016_09_03_typography">
-    <div class="container">
-      <div id="main" role="main">
-          <article>
-    <a href="/">Home</a>
-    <h2>Headings</h2>
+    <div id="page">
+      <div id="header" class="site-header">
+        <div class="wrap">
+          <div id="branding" role="banner">
+            <h1 class="site-title"><a class="site-title--link" href="/">Site Title</a></h1>
+          </div><!-- #branding banner -->
+        </div><!-- .wrap -->
+      </div><!-- #header .site-header -->
 
-<h1>H1 Heading</h1>
-
-<h2>H2 Heading</h2>
-
-<h3>H3 Heading</h3>
-
-<h4>H4 Heading</h4>
-
-<h5>H5 Heading</h5>
-
-<h6>H6 Heading</h6>
-
-<h2>Copy &amp; Lists</h2>
-
-<p>This is some copy that is meaningfully relevant. Testing paragraphs usually involves some amount of <em>lorem ipsum</em>-ing, but I&rsquo;m going to be different. I resolve to be different. Just like Apple. OK, no, actually, we&rsquo;re not going to be like Apple. We&rsquo;re going to be different from Apple. So we&rsquo;re going to do something different from thinking different. Which means we&rsquo;re going to think&hellip; same? But then by thinking same, we&rsquo;re thinking different from Apple, so really we&rsquo;re thinking different just the same as Apple but&hellip; oh, my god I can&rsquo;t handle this paragraph. Moving on.</p>
+      <div id="main">
+        <div class="wrap">
+          <div id="primary">
+            <div id="content" role="main">
+                <article>
+    <h2 class="textright blogtitle">Typography</h2>
+    <p>This is some copy that is meaningfully relevant. Testing paragraphs usually involves some amount of <em>lorem ipsum</em>-ing, but I&rsquo;m going to be different. I resolve to be different. Just like Apple. OK, no, actually, we&rsquo;re not going to be like Apple. We&rsquo;re going to be different from Apple. So we&rsquo;re going to do something different from thinking different. Which means we&rsquo;re going to think&hellip; same? But then by thinking same, we&rsquo;re thinking different from Apple, so really we&rsquo;re thinking different just the same as Apple but&hellip; oh, my god I can&rsquo;t handle this paragraph. Moving on.</p>
 
 <p>This unordered list will save the day:</p>
 
@@ -122,48 +117,108 @@ I smell it in the air.</p>
 23
 24
 25
-</pre></td><td class="rouge-code"><pre><span class="no">Life</span><span class="p">.</span><span class="nf">real?</span>
-<span class="no">Life</span><span class="p">.</span><span class="nf">fantasy?</span>
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+</pre></td><td class="rouge-code"><pre><span class="k">class</span> <span class="nc">This</span>
+  <span class="kp">attr_accessor</span> <span class="ss">:life</span>
 
-<span class="kp">catch</span><span class="p">(</span><span class="ss">:landslide</span><span class="p">)</span> <span class="k">do</span>
-  <span class="n">reality</span> <span class="o">=</span> <span class="kp">true</span>
-  <span class="k">while</span> <span class="n">reality</span>
+  <span class="k">def</span> <span class="nf">initialize</span>
+    <span class="nb">self</span><span class="p">.</span><span class="nf">life</span> <span class="o">=</span> <span class="no">Life</span><span class="p">.</span><span class="nf">real?</span> <span class="o">||</span> <span class="no">Life</span><span class="p">.</span><span class="nf">fantasy?</span>
+    <span class="n">landslide</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">landslide</span>
+    <span class="k">while</span> <span class="n">reality</span> <span class="o">=</span> <span class="kp">true</span>
+      <span class="n">look_up_to_the_skies</span>
+
+      <span class="nb">self</span><span class="p">.</span><span class="nf">wealth</span><span class="p">,</span> <span class="nb">self</span><span class="p">.</span><span class="nf">sex</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="no">Sex</span><span class="o">::</span><span class="no">MALE</span>
+
+      <span class="k">unless</span> <span class="nb">self</span><span class="p">.</span><span class="nf">sympathies</span><span class="p">[</span><span class="ss">:need</span><span class="p">]</span>
+        <span class="nb">self</span><span class="p">.</span><span class="nf">easy_come</span><span class="p">,</span> <span class="nb">self</span><span class="p">.</span><span class="nf">easy_go</span> <span class="o">=</span> <span class="kp">true</span>
+        <span class="nb">self</span><span class="p">.</span><span class="nf">high</span><span class="p">,</span> <span class="nb">self</span><span class="p">.</span><span class="nf">low</span> <span class="o">=</span> <span class="mi">0</span><span class="o">.</span><span class="mi">1</span>
+      <span class="k">end</span>
+
+      <span class="nb">self</span><span class="p">.</span><span class="nf">matter</span> <span class="o">=</span> <span class="n">wind_direction</span>
+
+      <span class="no">Piano</span><span class="p">.</span><span class="nf">play</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="kp">private</span>
+
+  <span class="k">def</span> <span class="nf">look_up_to_the_skies</span>
     <span class="n">character</span><span class="p">.</span><span class="nf">eyes</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">eye</span><span class="o">|</span>
       <span class="n">eye</span><span class="p">.</span><span class="nf">open</span>
       <span class="n">eye</span><span class="p">.</span><span class="nf">look</span><span class="p">(</span><span class="ss">direction: </span><span class="s1">'sky'</span><span class="p">)</span>
       <span class="n">eye</span><span class="p">.</span><span class="nf">see</span>
     <span class="k">end</span>
+  <span class="k">end</span>
 
-    <span class="nb">self</span><span class="p">.</span><span class="nf">wealth</span> <span class="o">=</span> <span class="kp">nil</span>
-    <span class="nb">self</span><span class="p">.</span><span class="nf">sex</span> <span class="o">=</span> <span class="no">Sex</span><span class="o">::</span><span class="no">MALE</span>
-
-    <span class="nb">self</span><span class="p">.</span><span class="nf">sympathies</span><span class="p">.</span><span class="nf">empty</span>
-
-    <span class="k">if</span> <span class="nb">self</span><span class="p">.</span><span class="nf">come_difficulty</span> <span class="o">==</span> <span class="no">Difficulty</span><span class="o">::</span><span class="no">EASY</span> <span class="o">&amp;&amp;</span> <span class="nb">self</span><span class="p">.</span><span class="nf">go_difficulty</span> <span class="o">==</span> <span class="no">Difficulty</span><span class="o">::</span><span class="no">EASY</span> <span class="o">&amp;&amp;</span> <span class="nb">self</span><span class="p">.</span><span class="nf">high</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">.</span><span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="nb">self</span><span class="p">.</span><span class="nf">low</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">.</span><span class="mi">1</span>
-      <span class="k">case</span> <span class="n">wind</span><span class="p">.</span><span class="nf">direction</span>
-      <span class="k">when</span> <span class="s1">'north'</span><span class="p">,</span> <span class="s1">'south'</span><span class="p">,</span> <span class="s1">'east'</span><span class="p">,</span> <span class="s1">'west'</span>
-        <span class="nb">self</span><span class="p">.</span><span class="nf">matter</span> <span class="o">=</span> <span class="kp">false</span><span class="p">;</span>
-      <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">direction</span><span class="p">(</span><span class="n">wind</span><span class="p">)</span>
+    <span class="k">case</span> <span class="n">wind</span><span class="p">.</span><span class="nf">direction</span>
+    <span class="k">when</span> <span class="s1">'north'</span><span class="p">,</span> <span class="s1">'south'</span><span class="p">,</span> <span class="s1">'east'</span><span class="p">,</span> <span class="s1">'west'</span>
+      <span class="kp">false</span>
     <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">easy_come_easy_go</span>
+    <span class="nb">self</span><span class="p">.</span><span class="nf">come_difficulty</span> <span class="o">==</span> <span class="no">Difficulty</span><span class="o">::</span><span class="no">EASY</span> <span class="o">&amp;&amp;</span>
+      <span class="nb">self</span><span class="p">.</span><span class="nf">go_difficulty</span> <span class="o">==</span> <span class="no">Difficulty</span><span class="o">::</span><span class="no">EASY</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">little_high_little_low</span>
+    <span class="nb">self</span><span class="p">.</span><span class="nf">high</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">.</span><span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="nb">self</span><span class="p">.</span><span class="nf">low</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">.</span><span class="mi">1</span>
   <span class="k">end</span>
 <span class="k">end</span>
 </pre></td></tr></tbody></table>
 </code></pre>
+<p>source: <a href="https://i.reddituploads.com/85fcf7342bae46a290bb117acade28f5?fit=max&amp;h=1536&amp;w=1536&amp;s=70366996b9866f91ff1fc98e310583e2">Reddit</a></p>
+
+<h2>Headings</h2>
+
+<h1>H1 Heading</h1>
+
+<h2>H2 Heading</h2>
+
+<h3>H3 Heading</h3>
+
+<h4>H4 Heading</h4>
+
+<h5>H5 Heading</h5>
+
+<h6>H6 Heading</h6>
+
   </article>
 
-      </div>
+            </div><!-- #content main -->
+          </div><!-- #primary -->
 
-      <aside>
-          <h3>Recent Articles</h3>
-          <ol>
-              <li><a href="/2016/09/03/typography.html">Typography</a> <span class="date">Sep  3</span></li>
-          </ol>
-
-        <h3>By Year</h3>
-        <ol>
-            <li><a href="/2016.html">2016 (1)</a></li>
-        </ol>
-      </aside>
-    </div>
+        </div><!-- .wrap -->
+      </div><!-- #main -->
+    </div><!-- #page -->
   </body>
 </html>
