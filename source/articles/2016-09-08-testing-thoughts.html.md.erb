@@ -1,0 +1,189 @@
+---
+title: Testing Thoughts
+date: 2016-09-08
+tags: testing
+---
+
+stubbing user/admin auth:
+ApplicationController.any_instance.stubs(:authenticate_admin).returns(nil)
+ApplicationController.any_instance.stubs(:authenticate_user).returns(nil)
+
+fill_trix
+scroll_to
+attempt_login_with
+etc.
+
+Selenium vs. Webkit
+
+Bucket of useful system/test helper methods that can be transferred between projects
++ wait_for_ajax
++ handle_js_confirm
++ t(&args)
++ post_json/get_json/put_json/delete_json/etc.
+
+Useful tactics for writing about tests
+For clients: metaphors, simple language, understanding what they are looking for, being able to relate what we're doing to what you're looking for, put aside developer sensibilities and aesthetics, let's get pragmatic about this, you have a business to run, you have research to do, you have users to gather
+For new developers: identify ALL ASSUMPTIONS. if you are making an assumption, point it out. let new developer know that if they see an assumption we're making without being aware of it, they should point it out. question. do not be afraid to say "I don't know" or "I was wrong"
+For team: examples, data, code snippets, rationale, building habits, code reviews, pull requests, questioning, concise...
+
+Simplest possible way to explain these things. Consistent test_helper file to start with.
+
+test/test_helper.rb
+```ruby
+require 'simplecov'
+SimpleCov.start
+
+require 'rubygems'
+require 'database_cleaner'
+
+ENV["RAILS_ENV"] ||= "test"
+require File.expand_path("../../config/environment", __FILE__)
+
+require "fabrication"
+Fabrication.configure do |config|
+  fabricator_path = "test/fabricators"
+end
+
+module TestHelper
+  def setup
+    DatabaseCleaner.strategy = :truncation
+    DatabaseCleaner.clean
+  end
+
+  def teardown
+  end
+end
+
+```
+
+test/system_helper.rb
+```ruby
+require 'test_helper'
+require 'rack/test'
+require 'mocha/setup'
+require 'capybara/dsl'
+require 'capybara/rails'
+require 'capybara/webkit'
+
+module SystemHelper
+  include Capybara::DSL
+  include Rack::Test::methods
+  include TestHelper
+  include Rails.application.routes.url_helpers
+
+  Capybara::Webkit.configure do |config|
+    config.block_unknown_urls
+  end
+
+  def setup_capybara
+    Capybara.javascript_driver = :webkit
+    Capybara.current_driver = Capybara.javascript_driver
+    Capybara.default_max_wait_time = 3
+  end
+
+  def teardown_capybara
+    Capybara.reset_sessions!
+    Capybara.use_default_driver
+  end
+end
+```
+
+Concepts
++ Integration/Acceptance
+  - Capybara
+  - Coping with Javascript-heavy applications
++ Data management
+  - Keeping the database clean between tests
+  - Using only the data needed to get the point across
+  - Performing only the actions necessary to get the point across (don't save when an unsaved object will provide the information you need)
++ Keeping track of coverage
+  - Lines covered - at least %80/application is what we're aiming for
+  - Keep track of any lines of code that get hit by tests dozens/hundreds/even thousands of times - in a perfect world, each line of code is hit once
+  - Do tests pass/fail when they need to - are you actually testing what you think you're testing
++ Shared assumptions/"the way things are done" & explanations
+  - "the way things are done" enables trust and consistency - reduces cognitive overhead, AT THE SAME TIME, comes with risks of complacency and inability to adapt to changing requirements/new tools, so question, but do not change unless you can convince everyone that the change will genuinely make things better
+  - minitest - simple, it's "just ruby", no expansive DSL to keep in mind - it's the language of the application, shares roughly the same context
+  - capybara - slower, but useful in integration/system tests due to ease of navigating the browser
++ Finding the time to test
++ Deciding WHAT to test
++ Balancing client budget with testing needs
++ Dealing with untested code
++ Give in to the way the code base does it, introduce change gradually, try to naturally fit into what's already present - if what's present sucks, then make it suck less incrementally
++ Write tests for bugs before making bug fixes, as often as possible
+
+Resources
++ Matt's [post](http://littlelines.com/blog/2013/12/17/a-guide-for-writing-maintainable-rails-tests/) from 2013
+
+Levels
++ Explain testing to clients
++ Explain testing to new developers
++ Talk about testing (consistently) internally
+  + What can we agree we need to trust from our tests?
+
+Random thoughts in no particular order
++ Keep CSS selectors out of the code - prefer to test the things that are not going to change
++ This is never going to be perfectly possible - big changes (especially with clients like Berggruen) will happen, and they will break tests - bear this in mind and make maintaining the test suite as important as getting the features right
++ We use Minitest
++ We use spec syntax
++ Do not nest describe blocks more than two levels deep (too much context)
++ If it's hard to set up a test, there's too much going on
++ When you fix specific bugs, use TDD
++ When writing a feature where TDD gets in the way instead of helping, test after the fact and use a "tdd"-ish process, where you comment out segments of code, write a test that should fail, ensure the test fails, uncomment code, ensure test passes
++ Prefer `let(:variable) { SOMETHING }` over `before { variable = SOMETHING }` - keep the database clean between tests!
++ Use Capybara for integration/acceptance/feature specs (do we have any agreed upon way of doing this? Accept that each client may be different, and have a preference for greenfields?)
++ Use headless driver when possible - it's faster, but not as easy to debug. We could keep a non-headless driver around for debugging but there are inconsistencies between the two.
++ Tests that pass locally often fail in Semaphore, inconsistently. We have a few projects with tests that consistently fail to be consistent when they hit Semaphore - put some sort of bounty on figuring these things out?
++ Prefer unit tests over system/integration specs - they're faster, and the easier they are to write, the more modular the code is
++ Keep structure of language in tests consistent
++ Keep similar tests similar to each other - let the differences stand out
++ Avoid Mocks & Stubs for the most part - use Mocha where absolutely necessary
++ Avoid saving or creating objects in the database when instantiating will work just as well (speed)
++ Do not create more objects that you need
++ Do not let the data confuse the intent of the test - use data that is obviously junk so that it's obvious what does and does not matter (example: instead of 'company_name: AT&T' use 'company_name: Some Random Company Name' or 'company_name: zzzzz')
++ TestHelper module for unit test helper methhods
++ AcceptanceHelper/SystemHelper for acceptance/system test helper methods (generally with capybara)
++ For System tests, it's faster to stub out authentication instead of manually having the test user sign in before each and every test - unless specifically testing sign in/sign out process
++ If you port code over from other projects, make sure to bring along associated tests and double check for context-specific code that needs to be removed/changed
++ Use DatabaseCleaner to ensure that sweet clean database
++ Use SimpleCov to track progress
++ Things to look for: large swatches of code that are missed, or particular segments of code that are hit by the test swuite an unreasonable amount of times
++ Put SimpleCov.start AT THE VERY TOP OF THE TEST HELPER FILE or things will get missed
+
+Points for clients:
++ Yeah, we spend time on it - is worth it. Code bases quickly grow complex and we developers need to make up for the fact that our brains are not giant super computers by putting the context we know when we know it into formal terms, so that the knowledge of that context still exists in the code base even after we've moved on to a different context. That is probably not the way to explain to clients.
++ Try again.
++ Money. Time now saves time later. Time now keeps the project from being dead later. Time now makes your code base healthier. It's healthier because of bugs. Let's try to explain this to a non-developer.
+
+Think about your calendar. You have a lot to do on any given day and it can be difficult to keep that all in your head. So you use technological extensions that exist outside of yourself in order to store what you know now about what you need to do tomorrow. Now you don't need to worry about whether you remember that knowledge tomorrow, because your calendar is going to ping you. You save a lot of time and energy not having to think about all of the things you have to do all of the time. If you had to sit down every few minutes and think to yourself, "Do I have anything I need to do in the next hour?" and you had to recall all of the things that you have to do in the next few days, or weeks, or months, and think about when and where they happen and whether or not any of those things happen in the next hour, you would lose a lot of time just trying to remember everything. But you don't often have to think to yourself about what you're saving by using the calendar. And yes, it requires some maintenance to keep the calendar. Tests are the same way.
+
+Tests encode intention. They keep the context even when we lose it, because we write the context into the tests when it's fresh in our minds. It's not that we don't work hard to think about what we might be effecting in the code base when we make changes - just like you try to be aware of when your next meeting is so you're mentally prepared even if you know the calendar is going to buzz you and you don't actually NEED to know. It's a layer of security. It's a layer of security that becomes more and more important as the code base gets bigger and capable of doing more and more things. However, if we don't take care of the test suite while the code base is small, then getting the test suite up to snuff when the code base is big enough for it to REALLY matter is a huge and laborous feat, requiring us to remember all of the context. It's too easy to miss everything.
+
+You keep your appointments more consistently with a calendar and we keep our code base bug free more consistently with a good test suite. And the better that test suite is designed and managed, the easier the entire code base is to design and manage - this saves time. Think about it - take my word for it - blah - it's much easier to put the context as it's supposed to be down in a test when the context is fresh in your mind. Yes it adds some time to the process of developing. But when we find a bug in untested code, it takes even MORE time, because we have to reliably reproduce the bug, figure out where it's coming from, make a fix, and then somehow guarantee that the fix we made didn't just break or touch a dozen other things.
+
+Relate what clients care about to testing - how does testing lead to more users? How does testing lead to happier users? How does testing lead to users more willing to part with their cash? >_> Blah blah blah.
+
+Points for new developers:
++ Assumptions we make and things we do because consistency is important: minitest over rspec, spec syntax, keep to basic assertions (assert, refute) and try to avoid more complicated ones (assert_equal, however, gives a better error message than assert this == that)
++ Consider taking the time to write the test to be AS IMPORTANT, AN INTEGRAL PART OF writing the code that needs to get written
++ Run the test suite as often as possible - ESPECIALLY if the code base doesn't go through Semaphore (it really should go through Semaphore though)
++ If the test suite is unbearably slow, take some time to speed it up - let Nate deal with worrying about billing/explaining to clients why somebody spent four hours on testing instead of their newest shiny feature
++ Also research more about testing and help us get some language together to explain to clients why this is worth our time/their money
++ Guiding principles - a lot of them as seen in "thoughts in no particular order"
+
+How we talk about testing internally:
++ Do you run the test suite before commiting? If not, why? What can we do to make this easier for you to do and remember?
++ Do you write tests when you submit a change?
+
+THE MORE JS-INTENSIVE AN APP IS, THE WORSE THE TEST SUITE IS GOING TO BE
+when testing js, do not test specific js functionality - test the IMPORTANT side effects
+
+acceptance tests that need to work with JS and require a JS-friendly driver need special care
+they are prone to fits and spats of crappiness - lots of waiting for ajax requests and whatnot, lots of reloading the browser again, and again, and again in order to get all of the context rolling for each and every individual test
+
+Do not forget nil values. Do not forget that the data IS GOING TO COME IN WONKY AT SOME POINT.
+
+Be careful with tests that loop over data and make an assertion per loop - your messages are going to suck and it'll be harder to debug
+
+In tests, it's important to balance the desire to make code DRY with the understanding that the tests need to be thorough (we look for > 80% per project), fast, readable, easy to debug, etc.
+
+We could keep a list of projects in need of testing love. Of course we also have to bear in mind that some clients do not have the budget to get crazy with testing. But taking ten or fifteen minutes here or there to bump a test suite that's at 30% to 33% is worth the time and effort - especially if it's a consistent thing.
