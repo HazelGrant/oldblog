@@ -28,55 +28,90 @@
                 <article>
     <h2 class="textright blogtitle">Testing Thoughts</h2>
     <p>stubbing user/admin auth:
-ApplicationController.any<em>instance.stubs(:authenticate</em>admin).returns(nil)
-ApplicationController.any<em>instance.stubs(:authenticate</em>user).returns(nil)</p>
+<code>ApplicationController.any_instance.stubs(:authenticate_admin).returns(nil)</code>
+<code>ApplicationController.any_instance.stubs(:authenticate_user).returns(nil)</code></p>
 
-<p>fill<em>trix
-scroll</em>to
-attempt<em>login</em>with
-etc.</p>
+<ul>
+<li><code>fill_trix</code></li>
+<li><code>scroll_to</code></li>
+<li><code>attempt_login_with</code></li>
+<li>etc.</li>
+</ul>
 
 <p>Selenium vs. Webkit</p>
 
-<p>Bucket of useful system/test helper methods that can be transferred between projects
-+ wait<em>for</em>ajax
-+ handle<em>js</em>confirm
-+ t(&amp;args)
-+ post<em>json/get</em>json/put<em>json/delete</em>json/etc.</p>
+<p>Bucket of useful system/test helper methods that can be transferred between projects</p>
 
-<p>Useful tactics for writing about tests
-For clients: metaphors, simple language, understanding what they are looking for, being able to relate what we&rsquo;re doing to what you&rsquo;re looking for, put aside developer sensibilities and aesthetics, let&rsquo;s get pragmatic about this, you have a business to run, you have research to do, you have users to gather
-For new developers: identify ALL ASSUMPTIONS. if you are making an assumption, point it out. let new developer know that if they see an assumption we&rsquo;re making without being aware of it, they should point it out. question. do not be afraid to say &ldquo;I don&rsquo;t know&rdquo; or &ldquo;I was wrong&rdquo;
-For team: examples, data, code snippets, rationale, building habits, code reviews, pull requests, questioning, concise&hellip;</p>
+<ul>
+<li>wait<em>for</em>ajax</li>
+<li>handle<em>js</em>confirm</li>
+<li>t(&amp;args)</li>
+<li>post<em>json/get</em>json/put<em>json/delete</em>json/etc.</li>
+</ul>
+
+<p>Useful tactics for writing about tests</p>
+
+<ul>
+<li>For clients: metaphors, simple language, understanding what they are looking for, being able to relate what we&rsquo;re doing to what you&rsquo;re looking for, put aside developer sensibilities and aesthetics, let&rsquo;s get pragmatic about this, you have a business to run, you have research to do, you have users to gather</li>
+<li>For new developers: identify ALL ASSUMPTIONS. if you are making an assumption, point it out. let new developer know that if they see an assumption we&rsquo;re making without being aware of it, they should point it out. question. do not be afraid to say &ldquo;I don&rsquo;t know&rdquo; or &ldquo;I was wrong&rdquo;</li>
+<li>For team: examples, data, code snippets, rationale, building habits, code reviews, pull requests, questioning, concise&hellip;</li>
+</ul>
 
 <p>Simplest possible way to explain these things. Consistent test_helper file to start with.</p>
 
-<p>test/test_helper.rb
-&ldquo;`ruby
-require &lsquo;simplecov&rsquo;
-SimpleCov.start</p>
+<p>test/test_helper.rb</p>
+<pre class="highlight ruby"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+</pre></td><td class="rouge-code"><pre><span class="nb">require</span> <span class="s1">'simplecov'</span>
+<span class="no">SimpleCov</span><span class="p">.</span><span class="nf">start</span>
 
-<p>require &#39;rubygems&rsquo;
-require &#39;database_cleaner&rsquo;</p>
+<span class="nb">require</span> <span class="s1">'rubygems'</span>
+<span class="nb">require</span> <span class="s1">'database_cleaner'</span>
 
-<p>ENV[&quot;RAILS<em>ENV&rdquo;] ||= &ldquo;test&rdquo;
-require File.expand</em>path(&ldquo;../../config/environment&rdquo;, <strong>FILE</strong>)</p>
+<span class="no">ENV</span><span class="p">[</span><span class="s2">"RAILS_ENV"</span><span class="p">]</span> <span class="o">||=</span> <span class="s2">"test"</span>
+<span class="nb">require</span> <span class="no">File</span><span class="p">.</span><span class="nf">expand_path</span><span class="p">(</span><span class="s2">"../../config/environment"</span><span class="p">,</span> <span class="kp">__FILE__</span><span class="p">)</span>
 
-<p>require &ldquo;fabrication&rdquo;
-Fabrication.configure do |config|
-  fabricator_path = &ldquo;test/fabricators&rdquo;
-end</p>
+<span class="nb">require</span> <span class="s2">"fabrication"</span>
+<span class="no">Fabrication</span><span class="p">.</span><span class="nf">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+  <span class="n">fabricator_path</span> <span class="o">=</span> <span class="s2">"test/fabricators"</span>
+<span class="k">end</span>
 
-<p>module TestHelper
-  def setup
-    DatabaseCleaner.strategy = :truncation
-    DatabaseCleaner.clean
-  end</p>
+<span class="k">module</span> <span class="nn">TestHelper</span>
+  <span class="k">def</span> <span class="nf">setup</span>
+    <span class="no">DatabaseCleaner</span><span class="p">.</span><span class="nf">strategy</span> <span class="o">=</span> <span class="ss">:truncation</span>
+    <span class="no">DatabaseCleaner</span><span class="p">.</span><span class="nf">clean</span>
+  <span class="k">end</span>
 
-<p>def teardown
-  end
-end</p>
-<pre class="highlight plaintext"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+  <span class="k">def</span> <span class="nf">teardown</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+</pre></td></tr></tbody></table>
+</code></pre>
+<p>test/system_helper.rb</p>
+<pre class="highlight ruby"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
 4
@@ -104,107 +139,131 @@ end</p>
 26
 27
 28
-29
-30
-31
-</pre></td><td class="rouge-code"><pre>
-test/system_helper.rb
-```ruby
-require 'test_helper'
-require 'rack/test'
-require 'mocha/setup'
-require 'capybara/dsl'
-require 'capybara/rails'
-require 'capybara/webkit'
+</pre></td><td class="rouge-code"><pre><span class="nb">require</span> <span class="s1">'test_helper'</span>
+<span class="nb">require</span> <span class="s1">'rack/test'</span>
+<span class="nb">require</span> <span class="s1">'mocha/setup'</span>
+<span class="nb">require</span> <span class="s1">'capybara/dsl'</span>
+<span class="nb">require</span> <span class="s1">'capybara/rails'</span>
+<span class="nb">require</span> <span class="s1">'capybara/webkit'</span>
 
-module SystemHelper
-  include Capybara::DSL
-  include Rack::Test::methods
-  include TestHelper
-  include Rails.application.routes.url_helpers
+<span class="k">module</span> <span class="nn">SystemHelper</span>
+  <span class="kp">include</span> <span class="no">Capybara</span><span class="o">::</span><span class="no">DSL</span>
+  <span class="kp">include</span> <span class="no">Rack</span><span class="o">::</span><span class="no">Test</span><span class="o">::</span><span class="nb">methods</span>
+  <span class="kp">include</span> <span class="no">TestHelper</span>
+  <span class="kp">include</span> <span class="no">Rails</span><span class="p">.</span><span class="nf">application</span><span class="p">.</span><span class="nf">routes</span><span class="p">.</span><span class="nf">url_helpers</span>
 
-  Capybara::Webkit.configure do |config|
-    config.block_unknown_urls
-  end
+  <span class="no">Capybara</span><span class="o">::</span><span class="no">Webkit</span><span class="p">.</span><span class="nf">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+    <span class="n">config</span><span class="p">.</span><span class="nf">block_unknown_urls</span>
+  <span class="k">end</span>
 
-  def setup_capybara
-    Capybara.javascript_driver = :webkit
-    Capybara.current_driver = Capybara.javascript_driver
-    Capybara.default_max_wait_time = 3
-  end
+  <span class="k">def</span> <span class="nf">setup_capybara</span>
+    <span class="no">Capybara</span><span class="p">.</span><span class="nf">javascript_driver</span> <span class="o">=</span> <span class="ss">:webkit</span>
+    <span class="no">Capybara</span><span class="p">.</span><span class="nf">current_driver</span> <span class="o">=</span> <span class="no">Capybara</span><span class="p">.</span><span class="nf">javascript_driver</span>
+    <span class="no">Capybara</span><span class="p">.</span><span class="nf">default_max_wait_time</span> <span class="o">=</span> <span class="mi">3</span>
+  <span class="k">end</span>
 
-  def teardown_capybara
-    Capybara.reset_sessions!
-    Capybara.use_default_driver
-  end
-end
+  <span class="k">def</span> <span class="nf">teardown_capybara</span>
+    <span class="no">Capybara</span><span class="p">.</span><span class="nf">reset_sessions!</span>
+    <span class="no">Capybara</span><span class="p">.</span><span class="nf">use_default_driver</span>
+  <span class="k">end</span>
+<span class="k">end</span>
 </pre></td></tr></tbody></table>
 </code></pre>
-<p>Concepts
-+ Integration/Acceptance
-  - Capybara
-  - Coping with Javascript-heavy applications
-+ Data management
-  - Keeping the database clean between tests
-  - Using only the data needed to get the point across
-  - Performing only the actions necessary to get the point across (don&rsquo;t save when an unsaved object will provide the information you need)
-+ Keeping track of coverage
-  - Lines covered - at least %80/application is what we&rsquo;re aiming for
-  - Keep track of any lines of code that get hit by tests dozens/hundreds/even thousands of times - in a perfect world, each line of code is hit once
-  - Do tests pass/fail when they need to - are you actually testing what you think you&rsquo;re testing
-+ Shared assumptions/&ldquo;the way things are done&rdquo; &amp; explanations
-  - &ldquo;the way things are done&rdquo; enables trust and consistency - reduces cognitive overhead, AT THE SAME TIME, comes with risks of complacency and inability to adapt to changing requirements/new tools, so question, but do not change unless you can convince everyone that the change will genuinely make things better
-  - minitest - simple, it&rsquo;s &ldquo;just ruby&rdquo;, no expansive DSL to keep in mind - it&rsquo;s the language of the application, shares roughly the same context
-  - capybara - slower, but useful in integration/system tests due to ease of navigating the browser
-+ Finding the time to test
-+ Deciding WHAT to test
-+ Balancing client budget with testing needs
-+ Dealing with untested code
-+ Give in to the way the code base does it, introduce change gradually, try to naturally fit into what&rsquo;s already present - if what&rsquo;s present sucks, then make it suck less incrementally
-+ Write tests for bugs before making bug fixes, as often as possible</p>
+<p>Concepts</p>
 
-<p>Resources
-+ Matt&rsquo;s <a href="http://littlelines.com/blog/2013/12/17/a-guide-for-writing-maintainable-rails-tests/">post</a> from 2013</p>
+<ul>
+<li>Integration/Acceptance
 
-<p>Levels
-+ Explain testing to clients
-+ Explain testing to new developers
-+ Talk about testing (consistently) internally
-  + What can we agree we need to trust from our tests?</p>
+<ul>
+<li>Capybara</li>
+<li>Coping with Javascript-heavy applications</li>
+</ul></li>
+<li>Data management
 
-<p>Random thoughts in no particular order
-+ Keep CSS selectors out of the code - prefer to test the things that are not going to change
-+ This is never going to be perfectly possible - big changes (especially with clients like Berggruen) will happen, and they will break tests - bear this in mind and make maintaining the test suite as important as getting the features right
-+ We use Minitest
-+ We use spec syntax
-+ Do not nest describe blocks more than two levels deep (too much context)
-+ If it&rsquo;s hard to set up a test, there&rsquo;s too much going on
-+ When you fix specific bugs, use TDD
-+ When writing a feature where TDD gets in the way instead of helping, test after the fact and use a &ldquo;tdd&rdquo;-ish process, where you comment out segments of code, write a test that should fail, ensure the test fails, uncomment code, ensure test passes
-+ Prefer <code>let(:variable) { SOMETHING }</code> over <code>before { variable = SOMETHING }</code> - keep the database clean between tests!
-+ Use Capybara for integration/acceptance/feature specs (do we have any agreed upon way of doing this? Accept that each client may be different, and have a preference for greenfields?)
-+ Use headless driver when possible - it&rsquo;s faster, but not as easy to debug. We could keep a non-headless driver around for debugging but there are inconsistencies between the two.
-+ Tests that pass locally often fail in Semaphore, inconsistently. We have a few projects with tests that consistently fail to be consistent when they hit Semaphore - put some sort of bounty on figuring these things out?
-+ Prefer unit tests over system/integration specs - they&rsquo;re faster, and the easier they are to write, the more modular the code is
-+ Keep structure of language in tests consistent
-+ Keep similar tests similar to each other - let the differences stand out
-+ Avoid Mocks &amp; Stubs for the most part - use Mocha where absolutely necessary
-+ Avoid saving or creating objects in the database when instantiating will work just as well (speed)
-+ Do not create more objects that you need
-+ Do not let the data confuse the intent of the test - use data that is obviously junk so that it&rsquo;s obvious what does and does not matter (example: instead of &#39;company<em>name: AT&amp;T&rsquo; use &#39;company</em>name: Some Random Company Name&rsquo; or &#39;company_name: zzzzz&rsquo;)
-+ TestHelper module for unit test helper methhods
-+ AcceptanceHelper/SystemHelper for acceptance/system test helper methods (generally with capybara)
-+ For System tests, it&rsquo;s faster to stub out authentication instead of manually having the test user sign in before each and every test - unless specifically testing sign in/sign out process
-+ If you port code over from other projects, make sure to bring along associated tests and double check for context-specific code that needs to be removed/changed
-+ Use DatabaseCleaner to ensure that sweet clean database
-+ Use SimpleCov to track progress
-+ Things to look for: large swatches of code that are missed, or particular segments of code that are hit by the test swuite an unreasonable amount of times
-+ Put SimpleCov.start AT THE VERY TOP OF THE TEST HELPER FILE or things will get missed</p>
+<ul>
+<li>Keeping the database clean between tests</li>
+<li>Using only the data needed to get the point across</li>
+<li>Performing only the actions necessary to get the point across (don&rsquo;t save when an unsaved object will provide the information you need)</li>
+</ul></li>
+<li>Keeping track of coverage
 
-<p>Points for clients:
-+ Yeah, we spend time on it - is worth it. Code bases quickly grow complex and we developers need to make up for the fact that our brains are not giant super computers by putting the context we know when we know it into formal terms, so that the knowledge of that context still exists in the code base even after we&rsquo;ve moved on to a different context. That is probably not the way to explain to clients.
-+ Try again.
-+ Money. Time now saves time later. Time now keeps the project from being dead later. Time now makes your code base healthier. It&rsquo;s healthier because of bugs. Let&rsquo;s try to explain this to a non-developer.</p>
+<ul>
+<li>Lines covered - at least %80/application is what we&rsquo;re aiming for</li>
+<li>Keep track of any lines of code that get hit by tests dozens/hundreds/even thousands of times - in a perfect world, each line of code is hit once</li>
+<li>Do tests pass/fail when they need to - are you actually testing what you think you&rsquo;re testing</li>
+</ul></li>
+<li>Shared assumptions/&ldquo;the way things are done&rdquo; &amp; explanations
+
+<ul>
+<li>&ldquo;the way things are done&rdquo; enables trust and consistency - reduces cognitive overhead, AT THE SAME TIME, comes with risks of complacency and inability to adapt to changing requirements/new tools, so question, but do not change unless you can convince everyone that the change will genuinely make things better</li>
+<li>minitest - simple, it&rsquo;s &ldquo;just ruby&rdquo;, no expansive DSL to keep in mind - it&rsquo;s the language of the application, shares roughly the same context</li>
+<li>capybara - slower, but useful in integration/system tests due to ease of navigating the browser</li>
+</ul></li>
+<li>Finding the time to test</li>
+<li>Deciding WHAT to test</li>
+<li>Balancing client budget with testing needs</li>
+<li>Dealing with untested code</li>
+<li>Give in to the way the code base does it, introduce change gradually, try to naturally fit into what&rsquo;s already present - if what&rsquo;s present sucks, then make it suck less incrementally</li>
+<li>Write tests for bugs before making bug fixes, as often as possible</li>
+</ul>
+
+<p>Resources</p>
+
+<ul>
+<li>Matt&rsquo;s <a href="http://littlelines.com/blog/2013/12/17/a-guide-for-writing-maintainable-rails-tests/">post</a> from 2013</li>
+</ul>
+
+<p>Levels</p>
+
+<ul>
+<li>Explain testing to clients</li>
+<li>Explain testing to new developers</li>
+<li>Talk about testing (consistently) internally
+
+<ul>
+<li>What can we agree we need to trust from our tests?</li>
+</ul></li>
+</ul>
+
+<p>Random thoughts in no particular order</p>
+
+<ul>
+<li>Keep CSS selectors out of the code - prefer to test the things that are not going to change</li>
+<li>This is never going to be perfectly possible - big changes (especially with clients like Berggruen) will happen, and they will break tests - bear this in mind and make maintaining the test suite as important as getting the features right</li>
+<li>We use Minitest</li>
+<li>We use spec syntax</li>
+<li>Do not nest describe blocks more than two levels deep (too much context)</li>
+<li>If it&rsquo;s hard to set up a test, there&rsquo;s too much going on</li>
+<li>When you fix specific bugs, use TDD</li>
+<li>When writing a feature where TDD gets in the way instead of helping, test after the fact and use a &ldquo;tdd&rdquo;-ish process, where you comment out segments of code, write a test that should fail, ensure the test fails, uncomment code, ensure test passes</li>
+<li>Prefer <code>let(:variable) { SOMETHING }</code> over <code>before { variable = SOMETHING }</code> - keep the database clean between tests!</li>
+<li>Use Capybara for integration/acceptance/feature specs (do we have any agreed upon way of doing this? Accept that each client may be different, and have a preference for greenfields?)</li>
+<li>Use headless driver when possible - it&rsquo;s faster, but not as easy to debug. We could keep a non-headless driver around for debugging but there are inconsistencies between the two.</li>
+<li>Tests that pass locally often fail in Semaphore, inconsistently. We have a few projects with tests that consistently fail to be consistent when they hit Semaphore - put some sort of bounty on figuring these things out?</li>
+<li>Prefer unit tests over system/integration specs - they&rsquo;re faster, and the easier they are to write, the more modular the code is</li>
+<li>Keep structure of language in tests consistent</li>
+<li>Keep similar tests similar to each other - let the differences stand out</li>
+<li>Avoid Mocks &amp; Stubs for the most part - use Mocha where absolutely necessary</li>
+<li>Avoid saving or creating objects in the database when instantiating will work just as well (speed)</li>
+<li>Do not create more objects that you need</li>
+<li>Do not let the data confuse the intent of the test - use data that is obviously junk so that it&rsquo;s obvious what does and does not matter (example: instead of &lsquo;company<em>name: AT&amp;T&rsquo; use &#39;company</em>name: Some Random Company Name&rsquo; or &#39;company_name: zzzzz&rsquo;)</li>
+<li>TestHelper module for unit test helper methhods</li>
+<li>AcceptanceHelper/SystemHelper for acceptance/system test helper methods (generally with capybara)</li>
+<li>For System tests, it&rsquo;s faster to stub out authentication instead of manually having the test user sign in before each and every test - unless specifically testing sign in/sign out process</li>
+<li>If you port code over from other projects, make sure to bring along associated tests and double check for context-specific code that needs to be removed/changed</li>
+<li>Use DatabaseCleaner to ensure that sweet clean database</li>
+<li>Use SimpleCov to track progress</li>
+<li>Things to look for: large swatches of code that are missed, or particular segments of code that are hit by the test swuite an unreasonable amount of times</li>
+<li>Put SimpleCov.start AT THE VERY TOP OF THE TEST HELPER FILE or things will get missed</li>
+</ul>
+
+<p>Points for clients:</p>
+
+<ul>
+<li>Yeah, we spend time on it - is worth it. Code bases quickly grow complex and we developers need to make up for the fact that our brains are not giant super computers by putting the context we know when we know it into formal terms, so that the knowledge of that context still exists in the code base even after we&rsquo;ve moved on to a different context. That is probably not the way to explain to clients.</li>
+<li>Try again.</li>
+<li>Money. Time now saves time later. Time now keeps the project from being dead later. Time now makes your code base healthier. It&rsquo;s healthier because of bugs. Let&rsquo;s try to explain this to a non-developer.</li>
+</ul>
 
 <p>Think about your calendar. You have a lot to do on any given day and it can be difficult to keep that all in your head. So you use technological extensions that exist outside of yourself in order to store what you know now about what you need to do tomorrow. Now you don&rsquo;t need to worry about whether you remember that knowledge tomorrow, because your calendar is going to ping you. You save a lot of time and energy not having to think about all of the things you have to do all of the time. If you had to sit down every few minutes and think to yourself, &ldquo;Do I have anything I need to do in the next hour?&rdquo; and you had to recall all of the things that you have to do in the next few days, or weeks, or months, and think about when and where they happen and whether or not any of those things happen in the next hour, you would lose a lot of time just trying to remember everything. But you don&rsquo;t often have to think to yourself about what you&rsquo;re saving by using the calendar. And yes, it requires some maintenance to keep the calendar. Tests are the same way.</p>
 
@@ -214,17 +273,23 @@ end
 
 <p>Relate what clients care about to testing - how does testing lead to more users? How does testing lead to happier users? How does testing lead to users more willing to part with their cash? &gt;_&gt; Blah blah blah.</p>
 
-<p>Points for new developers:
-+ Assumptions we make and things we do because consistency is important: minitest over rspec, spec syntax, keep to basic assertions (assert, refute) and try to avoid more complicated ones (assert_equal, however, gives a better error message than assert this == that)
-+ Consider taking the time to write the test to be AS IMPORTANT, AN INTEGRAL PART OF writing the code that needs to get written
-+ Run the test suite as often as possible - ESPECIALLY if the code base doesn&rsquo;t go through Semaphore (it really should go through Semaphore though)
-+ If the test suite is unbearably slow, take some time to speed it up - let Nate deal with worrying about billing/explaining to clients why somebody spent four hours on testing instead of their newest shiny feature
-+ Also research more about testing and help us get some language together to explain to clients why this is worth our time/their money
-+ Guiding principles - a lot of them as seen in &ldquo;thoughts in no particular order&rdquo;</p>
+<p>Points for new developers:</p>
 
-<p>How we talk about testing internally:
-+ Do you run the test suite before commiting? If not, why? What can we do to make this easier for you to do and remember?
-+ Do you write tests when you submit a change?</p>
+<ul>
+<li>Assumptions we make and things we do because consistency is important: minitest over rspec, spec syntax, keep to basic assertions (assert, refute) and try to avoid more complicated ones (assert_equal, however, gives a better error message than assert this == that)</li>
+<li>Consider taking the time to write the test to be AS IMPORTANT, AN INTEGRAL PART OF writing the code that needs to get written</li>
+<li>Run the test suite as often as possible - ESPECIALLY if the code base doesn&rsquo;t go through Semaphore (it really should go through Semaphore though)</li>
+<li>If the test suite is unbearably slow, take some time to speed it up - let Nate deal with worrying about billing/explaining to clients why somebody spent four hours on testing instead of their newest shiny feature</li>
+<li>Also research more about testing and help us get some language together to explain to clients why this is worth our time/their money</li>
+<li>Guiding principles - a lot of them as seen in &ldquo;thoughts in no particular order&rdquo;</li>
+</ul>
+
+<p>How we talk about testing internally:</p>
+
+<ul>
+<li>Do you run the test suite before commiting? If not, why? What can we do to make this easier for you to do and remember?</li>
+<li>Do you write tests when you submit a change?</li>
+</ul>
 
 <p>THE MORE JS-INTENSIVE AN APP IS, THE WORSE THE TEST SUITE IS GOING TO BE
 when testing js, do not test specific js functionality - test the IMPORTANT side effects</p>
