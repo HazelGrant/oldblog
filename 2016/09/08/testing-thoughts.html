@@ -27,7 +27,343 @@
             <div id="content" role="main">
                 <article>
     <h2 class="textright blogtitle">Testing Thoughts</h2>
-    <p>stubbing user/admin auth:
+    <h2>Internal Guidelines</h2>
+
+<h3>Basics</h3>
+
+<p>Generally we use Minitest. We still need some familiarity with Rspec because we inherit some legacy projects which use it. Matt, on why we use Minitest:</p>
+
+<blockquote>
+<p>I like to use MiniTest for writing tests because of its simplicity and it provides a complete set of testing facilities without the noise. Best of all it&rsquo;s shipped with Ruby [&hellip;].</p>
+</blockquote>
+
+<p>Matt&rsquo;s <a href="http://littlelines.com/blog/2013/12/17/a-guide-for-writing-maintainable-rails-tests/">post</a> from 2013 remains relevant and quite helpful.</p>
+
+<h3>Coverage</h3>
+
+<p>Our agreed-upon baseline goal for every project is 80% test coverage.</p>
+
+<p>In order to monitor the coverage, we use SimpleCov. The default setup for this is in <strong>test/test_helper.rb</strong> and MUST come before any other code in the file (or the coverage will not be calculated in a sane/predictable manner).</p>
+
+<p><strong>Gemfile</strong></p>
+<pre class="highlight ruby"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre><span class="n">group</span> <span class="ss">:test</span> <span class="k">do</span>
+  <span class="n">gem</span> <span class="s1">'simplecov'</span><span class="p">,</span> <span class="ss">require: </span><span class="kp">false</span>
+<span class="k">end</span>
+</pre></td></tr></tbody></table>
+</code></pre>
+<p><strong>test/test_helper.rb</strong></p>
+<pre class="highlight ruby"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="rouge-code"><pre><span class="nb">require</span> <span class="s1">'simplecov'</span>
+<span class="no">SimpleCov</span><span class="p">.</span><span class="nf">start</span>
+
+<span class="no">ENV</span><span class="p">[</span><span class="s1">'RAILS_ENV'</span><span class="p">]</span> <span class="o">||=</span> <span class="s1">'test'</span>
+<span class="nb">require</span> <span class="no">File</span><span class="p">.</span><span class="nf">expand_path</span><span class="p">(</span><span class="s1">'../../config/environment'</span><span class="p">,</span> <span class="kp">__FILE__</span><span class="p">)</span>
+
+<span class="n">etc</span><span class="o">.</span>
+</pre></td></tr></tbody></table>
+</code></pre>
+<p>See <a href="https://github.com/colszowka/simplecov/blob/master/README.md">SimpleCov Documentation</a> for more information.</p>
+
+<p><em>TODO</em></p>
+
+<p>Test &amp; investigate:</p>
+
+<blockquote>
+<p>SimpleCov must be running in the process that you want the code coverage analysis to happen on. When testing a server process (i.e. a JSON API endpoint) via a separate test process (i.e. when using Selenium) where you want to see all code executed by the <code>rails server</code>, and not just code executed in your actual test files, you&rsquo;ll want to add something like this to the top of <code>script/rails</code> (or <code>bin/rails</code> for Rails 4):</p>
+<pre class="highlight ruby"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre><span class="k">if</span> <span class="no">ENV</span><span class="p">[</span><span class="s1">'RAILS_ENV'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'test'</span>
+  <span class="nb">require</span> <span class="s1">'simplecov'</span>
+  <span class="no">SimpleCov</span><span class="p">.</span><span class="nf">start</span> <span class="s1">'rails'</span>
+  <span class="nb">puts</span> <span class="s2">"required SimpleCov"</span>
+<span class="k">end</span>
+</pre></td></tr></tbody></table>
+</code></pre></blockquote>
+
+<h3>Managing the time to test <small>(Potential blog post)</small></h3>
+
+<p>On as many projects as possible, incorporate testing into estimates for all features. Consider the time it takes to test to be part and parcel with the time it takes to deliver. Use test-driven development where it makes sense, especially if it helps you to break down the problem. When and/or if you find that test-driven development is hindering your ability to explore the problem, explore in code until you have a better understanding and then return to testing.</p>
+
+<p>On fixing bugs, always write a test for the bug fix. This provides us with a robust regression test suite and helps prevent repeat bugs. It also documents potential problems with the application code and let&rsquo;s people reviewing the test suite understand the major concerns of the application.</p>
+
+<p>On projects where budget/time is limited, highest priority is to ship, still <em>absolutely slow down and take the time to write tests</em>. Taking ten or fifteen minutes to write a test for the code you&rsquo;re working on is inexpensive now and profitable in the long-run. A code base with 20% test coverage and a limited budget isn&rsquo;t going to get to 80% coverage over night or even over the course of a week or a month. But testing should always be lurking in the back of your mind, and whenever you see the opportunity to increase coverage (especially if it&rsquo;s in a part of the code base that is relied upon in multiple places and/or is prone to breaking), take it.</p>
+
+<p><strong>Increasing test coverage from 20% to 21% is improvement. Prioritize regular incremental improvement over sweeping changes. (Avoid sweeping changes.)</strong></p>
+
+<p>One way to keep testing constantly in mind is to <em>run your test suite before you commit anything</em>. Get into the habit. Map <code>bundle exec rake</code> to <code>br</code> (or some equal short, memorable alias).</p>
+
+<p><strong>~/.bash_profile</strong></p>
+<pre class="highlight shell"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre><span class="nb">alias </span><span class="nv">br</span><span class="o">=</span><span class="s1">'bundle exec rake'</span>
+</pre></td></tr></tbody></table>
+</code></pre>
+<p>For multiple reasons, the advice in this section may not always be practical.</p>
+
+<h4>Reasons it might not be practical:</h4>
+
+<p>Advice that&rsquo;s not practical: Running tests before every commit</p>
+
+<p>Reasons that might not be practical:</p>
+
+<ul>
+<li>Tests are sloooooooooow</li>
+<li>No, really, like, painfully, mind-bogglingly, hideously, I&rsquo;m-gonna-be-here-all-frakking-day slow</li>
+<li>Or they&rsquo;re just slow enough to break context and waste ten minutes that could have been spent doing something useful</li>
+<li>Tests are flaky and inconsistent</li>
+<li>Tests are slow, flaky, and inconsistent, and make you want to stab your eyes out</li>
+<li>When tests fail, you spend more time rewriting the tests than fixing anything that might actually be wrong with the code base</li>
+</ul>
+
+<p>How to address those reasons practically:</p>
+
+<ul>
+<li>Manually test things while working with crappy code bases</li>
+<li>Separate rake tasks for &lsquo;good&rsquo; tests versus &#39;bad&rsquo; tests</li>
+<li>Spend time speeding up tests - identify causes for slow tests and address them one at a time</li>
+<li>Run super slow tests in automated build process and run faster tests before committing</li>
+<li>Run tests that directly address the area you&rsquo;ve been working with</li>
+<li>Address flakiness and inconsistencies in test failures</li>
+<li>Make up personal, app-specific strategies for improving the code base</li>
+<li>Run gigantic test suites in parallel</li>
+</ul>
+
+<p>Advise that&rsquo;s not practical: Taking ten or fifteen minutes to write a test</p>
+
+<p>Reasons that might not be practical:</p>
+
+<ul>
+<li>They&rsquo;re integration tests, and it takes ten or fifteen minutes just to figure out what syntax to use that won&rsquo;t explode every third run</li>
+<li>Figuring out how to separate a bunch of junk from what needs to be tested takes way too long</li>
+<li>It&rsquo;s really just gonna take hours and hours to build any sort of test suite that doesn&rsquo;t completely suck and the client doesn&rsquo;t have the budget</li>
+<li>All of the code is way too tightly coupled to write reasonable tests</li>
+</ul>
+
+<p>How to address those reasons practically:
++ Separate test files that &ldquo;work&rdquo;
++ Focus on high-level integration tests for tightly-coupled code that test expected/desired behavior
++ etc.</p>
+
+<p><strong>TODO</strong></p>
+
+<ul>
+<li>Write section on test speed</li>
+<li>Write section on damage control for flaky test suites</li>
+<li>Write section on using semaphore to test/build with acceptance/integration and using unit tests in dev</li>
+<li>Prefer unit over integration</li>
+<li>Seriously consider: is an integration test here necessary?</li>
+</ul>
+
+<h3>Tools</h3>
+
+<ul>
+<li>Minitest</li>
+<li>Capybara</li>
+<li>Fabrication</li>
+<li>SimpleCov</li>
+<li>DatabaseCleaner</li>
+<li>Mocha</li>
+<li>Webkit Capybara</li>
+<li>Selenium Webkit</li>
+<li>Pry</li>
+<li>Fakeweb</li>
+<li>Launchy</li>
+<li>Capybara Screenshot</li>
+<li>Awesome Print</li>
+<li>Minitest Spec Syntax</li>
+<li>Poltergeist - prefer for newer projects? It&rsquo;s faster than selenium-webkit, but incompatible with it</li>
+</ul>
+
+<h3>Best Practices</h3>
+
+<ul>
+<li>Integration tests that deal with Javascript</li>
+<li>Integration tests that don&rsquo;t deal with Javascript</li>
+<li>Model tests</li>
+<li>Other unit tests</li>
+</ul>
+
+<p>Coping with data between tests:</p>
+
+<p>Using the <code>let</code> syntax provides data <em>which is only created in the tests that calls for it</em>. This makes tests faster and also helsp keep the database clean between tests.</p>
+<pre class="highlight ruby"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+</pre></td><td class="rouge-code"><pre><span class="nb">require</span> <span class="s1">'test_helper'</span>
+
+<span class="n">describe</span> <span class="no">ThingTest</span> <span class="k">do</span>
+  <span class="kp">include</span> <span class="no">TestHelper</span>
+
+  <span class="n">let</span><span class="p">(</span><span class="ss">:some_data</span><span class="p">)</span> <span class="p">{</span> <span class="no">Fabricate</span><span class="p">(</span><span class="ss">:data</span><span class="p">)</span> <span class="p">}</span>
+
+  <span class="n">it</span> <span class="s1">'exists in this test'</span> <span class="k">do</span>
+    <span class="n">assert</span> <span class="n">some_data</span><span class="p">.</span><span class="nf">exists?</span>
+  <span class="k">end</span>
+
+  <span class="n">it</span> <span class="s1">'does not exist in this test'</span> <span class="k">do</span>
+    <span class="n">assert</span> <span class="kp">true</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></td></tr></tbody></table>
+</code></pre>
+<p>vs.</p>
+<pre class="highlight ruby"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+</pre></td><td class="rouge-code"><pre><span class="nb">require</span> <span class="s1">'test_helper'</span>
+
+<span class="n">describe</span> <span class="no">ThingTest</span> <span class="k">do</span>
+  <span class="kp">include</span> <span class="no">TestHelper</span>
+
+  <span class="n">before</span> <span class="k">do</span>
+    <span class="vi">@some_data</span> <span class="o">=</span> <span class="no">Fabricate</span><span class="p">(</span><span class="ss">:data</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="n">it</span> <span class="s1">'exists here'</span> <span class="k">do</span>
+    <span class="n">assert</span> <span class="vi">@some_data</span><span class="p">.</span><span class="nf">exists?</span>
+  <span class="k">end</span>
+
+  <span class="n">it</span> <span class="s1">'also exists in this test'</span> <span class="k">do</span>
+    <span class="n">assert</span> <span class="kp">true</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></td></tr></tbody></table>
+</code></pre>
+<p>This can lead to some nasty bugs, especially in integration/system tests where the connection to the database might be different from the rest of the test suite. Let&rsquo;s say object <code>Data</code> has a <code>name</code> with <code>validates :name, presence: true, uniqueness: true</code>, and we&rsquo;re doing some integration testing where we have to deal with Data:</p>
+<pre class="highlight ruby"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+</pre></td><td class="rouge-code"><pre><span class="nb">require</span> <span class="s1">'system_helper'</span>
+
+<span class="n">describe</span> <span class="s1">'ThingIntegration'</span> <span class="k">do</span>
+  <span class="kp">include</span> <span class="no">SystemHelper</span>
+
+  <span class="n">before</span> <span class="k">do</span>
+    <span class="vi">@some_data</span> <span class="o">=</span> <span class="no">Fabricate</span><span class="p">(</span><span class="ss">:data</span><span class="p">,</span> <span class="ss">name: </span><span class="s1">'Some Unique Name'</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="n">it</span> <span class="s1">'exists here'</span> <span class="k">do</span>
+    <span class="n">visit</span> <span class="n">data_path</span><span class="p">(</span><span class="vi">@some_data</span><span class="p">)</span>
+    <span class="n">assert</span> <span class="kp">true</span>
+  <span class="k">end</span>
+
+  <span class="n">it</span> <span class="s1">'will blow up unexpectedly'</span> <span class="k">do</span>
+    <span class="n">visit</span> <span class="n">data_path</span><span class="p">(</span><span class="vi">@some_data</span><span class="p">)</span>
+    <span class="n">assert</span> <span class="kp">true</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></td></tr></tbody></table>
+</code></pre>
+<p>One of these tests will pass - the first one to run (test order should be random). The other will blow up because <code>@some_data</code> will be created, while the <em>previous</em> test&rsquo;s <code>@some_data</code> has already been created and is still floating around in the database. DatabaseCleaner didn&rsquo;t clean it up because we&rsquo;re using a driver that causes these tests to run with a different database connection than our unit tests.</p>
+
+<p>Generating random names with a gem like Faker can cause even <em>more</em> problems - because Faker can&rsquo;t guarantee that it&rsquo;ll generate a name it hasn&rsquo;t generated before, and therefore <em>sometimes your tests will pass</em> and sometimes they won&rsquo;t.</p>
+
+<p>Using <code>let(some_data) { Fabricate(:data, name: &#39;Some Unique Name&#39;) }</code> should prevent this? &ndash;&gt; TEST ME</p>
+
+<p>A quick gotcha with <code>let</code> -&gt; the object doesn&rsquo;t exist until you call it. Sometimes you need to make an assertion based on the object <em>already existing</em>. In this case, it may be faster to just add <code>assert some_data</code> to the top of the test, or:</p>
+<pre class="highlight ruby"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="rouge-code"><pre><span class="nb">require</span> <span class="s1">'system_helper'</span>
+
+<span class="n">describe</span> <span class="s1">'ThingIntegration'</span> <span class="k">do</span>
+  <span class="kp">include</span> <span class="no">SystemHelper</span>
+
+  <span class="n">before</span> <span class="k">do</span>
+    <span class="vi">@some_data</span> <span class="o">||=</span> <span class="no">Fabricate</span><span class="p">(</span><span class="ss">:data</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></td></tr></tbody></table>
+</code></pre>
+<p>Something to look into (why aren&rsquo;t we using this?):</p>
+
+<p>Monkey patch that forces all threads to share the same connection, which works on Capybara because it starts the web server in a thread:</p>
+<pre class="highlight ruby"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="rouge-code"><pre><span class="k">class</span> <span class="nc">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+  <span class="n">mattr_accessor</span> <span class="ss">:shared_connection</span>
+  <span class="vc">@@shared_connection</span> <span class="o">=</span> <span class="kp">nil</span>
+
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">connection</span>
+    <span class="vc">@@shared_connection</span> <span class="o">||</span> <span class="n">retrieve_connection</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span><span class="p">.</span><span class="nf">shared_connection</span> <span class="o">=</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span><span class="p">.</span><span class="nf">connection</span>
+</pre></td></tr></tbody></table>
+</code></pre>
+<p>I have this blog post somewhere.</p>
+
+<h3>Project Defaults <small>what they are, why they are, where to find them, what to cut/use depending on the project</small></h3>
+
+<p>stubbing user/admin auth:
 <code>ApplicationController.any_instance.stubs(:authenticate_admin).returns(nil)</code>
 <code>ApplicationController.any_instance.stubs(:authenticate_user).returns(nil)</code></p>
 
@@ -43,10 +379,10 @@
 <p>Bucket of useful system/test helper methods that can be transferred between projects</p>
 
 <ul>
-<li>wait<em>for</em>ajax</li>
-<li>handle<em>js</em>confirm</li>
-<li>t(&amp;args)</li>
-<li>post<em>json/get</em>json/put<em>json/delete</em>json/etc.</li>
+<li><code>wait_for_ajax</code></li>
+<li><code>handle_js_confirm</code></li>
+<li><code>t(&amp;args)</code></li>
+<li><code>post_json</code>/<code>get_json</code>/<code>put_json</code>/<code>delete_json</code>/etc.</li>
 </ul>
 
 <p>Useful tactics for writing about tests</p>
@@ -229,7 +565,7 @@
 
 <ul>
 <li>Keep CSS selectors out of the code - prefer to test the things that are not going to change</li>
-<li>This is never going to be perfectly possible - big changes (especially with clients like Berggruen) will happen, and they will break tests - bear this in mind and make maintaining the test suite as important as getting the features right</li>
+<li>This is never going to be perfectly possible - big changes will happen, and they will break tests - bear this in mind and make maintaining the test suite as important as getting the features right</li>
 <li>We use Minitest</li>
 <li>We use spec syntax</li>
 <li>Do not nest describe blocks more than two levels deep (too much context)</li>
@@ -246,7 +582,7 @@
 <li>Avoid Mocks &amp; Stubs for the most part - use Mocha where absolutely necessary</li>
 <li>Avoid saving or creating objects in the database when instantiating will work just as well (speed)</li>
 <li>Do not create more objects that you need</li>
-<li>Do not let the data confuse the intent of the test - use data that is obviously junk so that it&rsquo;s obvious what does and does not matter (example: instead of &lsquo;company<em>name: AT&amp;T&rsquo; use &#39;company</em>name: Some Random Company Name&rsquo; or &#39;company_name: zzzzz&rsquo;)</li>
+<li>Do not let the data confuse the intent of the test - use data that is obviously junk so that it&rsquo;s obvious what does and does not matter (example: instead of &#39;company<em>name: AT&amp;T&rsquo; use &#39;company</em>name: Some Random Company Name&rsquo; or &#39;company_name: zzzzz&rsquo;)</li>
 <li>TestHelper module for unit test helper methhods</li>
 <li>AcceptanceHelper/SystemHelper for acceptance/system test helper methods (generally with capybara)</li>
 <li>For System tests, it&rsquo;s faster to stub out authentication instead of manually having the test user sign in before each and every test - unless specifically testing sign in/sign out process</li>
@@ -279,7 +615,7 @@
 <li>Assumptions we make and things we do because consistency is important: minitest over rspec, spec syntax, keep to basic assertions (assert, refute) and try to avoid more complicated ones (assert_equal, however, gives a better error message than assert this == that)</li>
 <li>Consider taking the time to write the test to be AS IMPORTANT, AN INTEGRAL PART OF writing the code that needs to get written</li>
 <li>Run the test suite as often as possible - ESPECIALLY if the code base doesn&rsquo;t go through Semaphore (it really should go through Semaphore though)</li>
-<li>If the test suite is unbearably slow, take some time to speed it up - let Nate deal with worrying about billing/explaining to clients why somebody spent four hours on testing instead of their newest shiny feature</li>
+<li>If the test suite is unbearably slow, take some time to speed it up</li>
 <li>Also research more about testing and help us get some language together to explain to clients why this is worth our time/their money</li>
 <li>Guiding principles - a lot of them as seen in &ldquo;thoughts in no particular order&rdquo;</li>
 </ul>
