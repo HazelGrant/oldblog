@@ -13,37 +13,25 @@
   </head>
   <body class="x2016 x2016_09 x2016_09_13 x2016_09_13_git-remove-directory-from-history">
     <div id="page">
-      <div id="header" class="site-header">
-        <div class="wrap">
-          <div id="branding" role="banner">
-            <h1 class="site-title"><a class="site-title--link" href="/">Site Title</a></h1>
-          </div><!-- #branding banner -->
-        </div><!-- .wrap -->
-      </div><!-- #header .site-header -->
-
       <div id="main">
         <div class="wrap">
           <div id="primary">
             <div id="content" role="main">
-                <article>
-    <h2 class="textright blogtitle">git-remove-directory-from-history</h2>
+                <h3 style="text-align: right;margin: 50px;margin-right:-100px;">git-remove-directory-from-history</h3>
+  <article>
     <p><a href="http://stackoverflow.com/questions/10067848/remove-folder-and-its-contents-from-git-githubs-history/17824718#17824718">Answer that really helped me out</a></p>
 
 <p>This example removes <code>node_modules</code> from history</p>
-<pre class="highlight shell"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
-</pre></td><td class="rouge-code"><pre><span class="gp">$ </span>git filter --tree-filter <span class="s1">'rm -rf node_modules'</span> --prune-empty HEAD
-</pre></td></tr></tbody></table>
-</code></pre>
-<p>This is enough if you haven&rsquo;t committed the offending directory to Github/Bitbucket/what-have-you. Fortunately that was the boat I was in (because it was just a GIANT directory of photographs that I need locally but not in Github.)</p>
 
-<p>Else, continue:</p>
 <pre class="highlight shell"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
 4
 5
 6
-</pre></td><td class="rouge-code"><pre><span class="gp">$ </span>git <span class="k">for</span>-each-ref --format<span class="o">=</span><span class="s2">"%(refname"</span> refs/original/ | xargs -n 1 git update-ref -d
+7
+</pre></td><td class="rouge-code"><pre><span class="gp">$ </span>git filter-branch --tree-filter <span class="s1">'rm -rf node_modules'</span> --prune-empty HEAD
+<span class="gp">$ </span>git <span class="k">for</span>-each-ref --format<span class="o">=</span><span class="s2">"%(refname"</span> refs/original/ | xargs -n 1 git update-ref -d
 <span class="gp">$ </span><span class="nb">echo </span>node_modules/ &gt;&gt; .gitignore
 git add .gitignore
 git commit -m <span class="s2">"Removing node_modules from git history"</span>
@@ -51,11 +39,11 @@ git gc
 git push origin master --force
 </pre></td></tr></tbody></table>
 </code></pre>
+
   </article>
 
             </div><!-- #content main -->
           </div><!-- #primary -->
-
         </div><!-- .wrap -->
       </div><!-- #main -->
     </div><!-- #page -->
